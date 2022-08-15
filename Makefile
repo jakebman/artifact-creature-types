@@ -1,8 +1,15 @@
 
-all: creature-types oddities
+all: creature-types
 
-creature-types: normal-cards Makefile
-	cat normal-cards | sed -e 's/.*—//g' | tr ' ' '\n' | sort | uniq | tee creature-types
+creature-types: sub-types Makefile
+	grep -w -E -v "Blood|Clue|Contraption|Equipment|Food|Fortification|Gold|Treasure|Vehicle" sub-types | tee creature-types
+
+sub-types: ac-type-lines
+	cat ac-type-lines | sed -e 's/.*—//g' | tr ' ' '\n' | sort | uniq | tee sub-types
+
+ac-type-lines: normal-cards oddities
+	cat oddities  | sed -e 's| // |\n|g' | grep Artifact | grep Creature >ac-type-lines
+	cat normal-cards >>ac-type-lines
 
 oddities: types
 	grep '//' types | tee oddities
