@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# collect pages from scryfall
+
+PAGE=1
+URL="https://api.scryfall.com/cards/search?order=cmc&q=-is:funny t:artifact t:creature"
+while true; do
+  curl "$URL" >page${PAGE}.json
+  URL="$(jq <"page${PAGE}.json" '.next_page' --raw-output)"
+  more="$(jq <"page${PAGE}.json" '.has_more' --raw-output)"
+  if [ 'true' != "$more" ] ; then
+    break;
+  fi
+  ((PAGE+=1))
+done
+
