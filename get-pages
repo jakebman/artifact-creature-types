@@ -3,7 +3,7 @@
 # collect pages from scryfall
 
 PAGE=1
-URL="https://api.scryfall.com/cards/search?order=cmc&q=-is:funny t:artifact t:creature"
+URL="https://api.scryfall.com/cards/search?order=cmc&q=-is:funny t:artifact (t:creature OR t:tribal)"
 while true; do
   curl "$URL" >page${PAGE}.json
   URL="$(jq <"page${PAGE}.json" '.next_page' --raw-output)"
